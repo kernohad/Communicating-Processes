@@ -4,22 +4,24 @@
 #include <signal.h>
 #include <time.h>
 
-void sigHandler (int);
-
-pid_t pid;
-
-
 /*********************************************************
  * A program to learn about interprocess communication.
  * The parent process waits for signals sent by the child.
  *
  * Dustin Thurston & Dylan Kernohan
  *********************************************************/
+
+void sigHandler (int);
+
+pid_t pid;
+pid_t parentPID;
+
+
 int main() 
 {
     srand(time(0));
 	printf("Hello World!\n"); 
-
+    parentPID = getppid();
     signal (SIGINT, sigHandler);
     signal (SIGUSR1, sigHandler);
     signal (SIGUSR2, sigHandler);
@@ -77,11 +79,11 @@ void sigHandler (int sigNum){
         return;
     }
     else if(sigNum == SIGINT){
-        printf(" received. That's it, I'm shutting you down...\n");
+//        kill(parentPID,2);
+        printf(" received. That's it, I'm shutting you down...%d\n", getppid());
     }
 
     //Handling the interrupt to shut down the code    
-    sleep(1);
     exit(0);
 }
 
