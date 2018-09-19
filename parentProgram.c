@@ -29,14 +29,25 @@ int main()
         exit(1);
 
     }else if(pid == 0){
+        
         while(1){        
             //get random amount of time
             int waitTime = rand() % 5 + 1;
-
             sleep(waitTime);
+            
+            //get random signal to send
+            int randSig = rand() % 2 + 1;
 
-            kill(0, SIGUSR1);
-        
+            printf("randSig = %d\n", randSig);
+            if(randSig == 1){
+            
+                kill(getppid(), SIGUSR1);
+            
+            }else if (randSig == 2){
+                
+                kill(getppid(), SIGUSR2);
+            
+            }
         }
     }else{
 
@@ -48,7 +59,7 @@ int main()
         }
 
     
-        }
+    }
 
    return 0; 
 }
