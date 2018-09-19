@@ -50,7 +50,8 @@ int main()
             }
         }
     }else{
-
+        
+        // override ctrl-C signal in parent branch so only the parent knows about the override
         signal (SIGINT, sigHandler);
         printf("spawned child PID: %d\n", pid);
 
