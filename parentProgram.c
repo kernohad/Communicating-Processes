@@ -3,8 +3,7 @@
 #include <unistd.h> 
 #include <signal.h>
 
-void sigHandler1 (int);
-void sigHandler2 (int); 
+void sigHandler (int);
 
 pid_t pid;
 
@@ -19,8 +18,8 @@ int main()
 {	
 	printf("Hello World!\n"); 
 
-    signal (SIGUSR1, sigHandler1);
-    signal (SIGUSR2, sighandler2);
+    signal (SIGUSR1, sigHandler);
+    signal (SIGUSR2, sigHandler);
     
     //fork the child process
     if((pid = fork()) < 0){
@@ -34,25 +33,33 @@ int main()
 
         sleep(waitTime);
 
+        kill(0, SIGUSR1);
 
     }else{
         printf("spawned child PID: %d\n", pid);
 
+        printf ("waiting...\n");
+        pause();
+    
     }
 
-
-    printf ("waiting...\n");
-    pause();
-    return 0; 
+   return 0; 
 }
 
 
-void sigHandler1 (int sigNum){
-        printf("received a SIGUSR1 signal.\n");
+void sigHandler (int sigNum){
+
+    if(sigNum == SIGUSR1){
+        printf("This is the SIGUSR1 signal.\n");
+    }
+    else if(sigNum == SIGUSR2){
+        printf("This is the SIGUSR2 signal.\n");
+    }
+
+    // This is where shutdown code would be insrted
+    
+    sleep(1);
+    printf("outta here.\n");
+    exit(0);
 }
 
-void sigHandler2 (int sigNum){
-
-        printf("received a SIGUSR2 signal.\n");
-
-}
