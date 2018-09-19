@@ -3,7 +3,11 @@
 #include <unistd.h> 
 #include <signal.h>
 
-void sigHandler (int);
+void sigHandler1 (int);
+void sigHandler2 (int); 
+
+pid_t pid;
+
 
 /*********************************************************
  * A program to learn about interprocess communication.
@@ -17,6 +21,25 @@ int main()
 
     signal (SIGUSR1, sigHandler1);
     signal (SIGUSR2, sighandler2);
+    
+    //fork the child process
+    if((pid = fork()) < 0){
+        perror("fork failed");
+        exit(1);
+
+    }else if(pid == 0){
+        
+        //get random amount of time
+        int waitTime = rand() % 5 + 1;
+
+        sleep(waitTime);
+
+
+    }else{
+        printf("spawned child PID: %d\n", pid);
+
+    }
+
 
     printf ("waiting...\n");
     pause();
@@ -25,23 +48,11 @@ int main()
 
 
 void sigHandler1 (int sigNum){
-
-    printf(" received an interrupt.\n");
-
-    // This is where shutdown code would be insrted
-    
-    sleep(1);
-    printf("outta here.\n");
-    exit(0);
+        printf("received a SIGUSR1 signal.\n");
 }
 
 void sigHandler2 (int sigNum){
 
-    printf(" received an interrupt.\n");
+        printf("received a SIGUSR2 signal.\n");
 
-    // This is where shutdown code would be insrted
-    
-    sleep(1);
-    printf("outta here.\n");
-    exit(0);
 }
