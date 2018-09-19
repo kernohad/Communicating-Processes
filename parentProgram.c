@@ -15,8 +15,10 @@ int main()
 {	
 	printf("Hello World!\n"); 
 
-    signal (SIGUSR1, sigHandler1);
-    signal (SIGUSR2, sighandler2);
+    signal (SIGUSR1, sigHandler);
+    signal (SIGUSR2, sigHandler);
+
+    kill(0, SIGUSR1);
 
     printf ("waiting...\n");
     pause();
@@ -24,20 +26,14 @@ int main()
 }
 
 
-void sigHandler1 (int sigNum){
+void sigHandler (int sigNum){
 
-    printf(" received an interrupt.\n");
-
-    // This is where shutdown code would be insrted
-    
-    sleep(1);
-    printf("outta here.\n");
-    exit(0);
-}
-
-void sigHandler2 (int sigNum){
-
-    printf(" received an interrupt.\n");
+    if(sigNum == SIGUSR1){
+        printf("This is the SIGUSR1 signal.\n");
+    }
+    else if(sigNum == SIGUSR2){
+        printf("This is the SIGUSR2 signal.\n");
+    }
 
     // This is where shutdown code would be insrted
     
@@ -45,3 +41,4 @@ void sigHandler2 (int sigNum){
     printf("outta here.\n");
     exit(0);
 }
+
