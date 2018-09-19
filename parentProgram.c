@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <unistd.h> 
 #include <signal.h>
+#include <time.h>
 
 void sigHandler (int);
 
@@ -15,33 +16,39 @@ pid_t pid;
  * Dustin Thurston & Dylan Kernohan
  *********************************************************/
 int main() 
-{	
+{
+    srand(time(0));
 	printf("Hello World!\n"); 
 
     signal (SIGUSR1, sigHandler);
     signal (SIGUSR2, sigHandler);
-    
+
     //fork the child process
     if((pid = fork()) < 0){
         perror("fork failed");
         exit(1);
 
     }else if(pid == 0){
+        while(1){        
+            //get random amount of time
+            int waitTime = rand() % 5 + 1;
+
+            sleep(waitTime);
+
+            kill(0, SIGUSR1);
         
-        //get random amount of time
-        int waitTime = rand() % 5 + 1;
-
-        sleep(waitTime);
-
-        kill(0, SIGUSR1);
-
+        }
     }else{
+
         printf("spawned child PID: %d\n", pid);
 
-        printf ("waiting...\n");
-        pause();
+        while(1){
+            printf ("waiting...     ");
+            pause();
+        }
+
     
-    }
+        }
 
    return 0; 
 }
@@ -51,13 +58,14 @@ void sigHandler (int sigNum){
 
     if(sigNum == SIGUSR1){
         printf("This is the SIGUSR1 signal.\n");
+        return;
     }
     else if(sigNum == SIGUSR2){
         printf("This is the SIGUSR2 signal.\n");
+        return;
     }
 
-    // This is where shutdown code would be insrted
-    
+    //Handling the interrupt to shut down the code    
     sleep(1);
     printf("outta here.\n");
     exit(0);
