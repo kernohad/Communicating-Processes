@@ -20,9 +20,7 @@ pid_t parentPID;
 int main() 
 {
     srand(time(0));
-	printf("Hello World!\n"); 
     parentPID = getppid();
-    signal (SIGINT, sigHandler);
     signal (SIGUSR1, sigHandler);
     signal (SIGUSR2, sigHandler);
 
@@ -53,6 +51,7 @@ int main()
         }
     }else{
 
+        signal (SIGINT, sigHandler);
         printf("spawned child PID: %d\n", pid);
 
         while(1){
@@ -79,8 +78,7 @@ void sigHandler (int sigNum){
         return;
     }
     else if(sigNum == SIGINT){
-//        kill(parentPID,2);
-        printf(" received. That's it, I'm shutting you down...%d\n", getppid());
+        printf(" received. That's it, I'm shutting you down...\n");
     }
 
     //Handling the interrupt to shut down the code    
