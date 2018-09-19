@@ -20,6 +20,7 @@ int main()
     srand(time(0));
 	printf("Hello World!\n"); 
 
+    signal (SIGINT, sigHandler);
     signal (SIGUSR1, sigHandler);
     signal (SIGUSR2, sigHandler);
 
@@ -38,7 +39,6 @@ int main()
             //get random signal to send
             int randSig = rand() % 2 + 1;
 
-            printf("randSig = %d\n", randSig);
             if(randSig == 1){
             
                 kill(getppid(), SIGUSR1);
@@ -55,6 +55,7 @@ int main()
 
         while(1){
             printf ("waiting...     ");
+            fflush(stdout);
             pause();
         }
 
@@ -68,17 +69,19 @@ int main()
 void sigHandler (int sigNum){
 
     if(sigNum == SIGUSR1){
-        printf("This is the SIGUSR1 signal.\n");
+        printf("received a SIGUSR1 signal\n");
         return;
     }
     else if(sigNum == SIGUSR2){
-        printf("This is the SIGUSR2 signal.\n");
+        printf("received a SIGUSR2 signal\n");
         return;
+    }
+    else if(sigNum == SIGINT){
+        printf(" received. That's it, I'm shutting you down...\n");
     }
 
     //Handling the interrupt to shut down the code    
     sleep(1);
-    printf("outta here.\n");
     exit(0);
 }
 
