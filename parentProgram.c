@@ -2,6 +2,7 @@
 #include <stdlib.h> 
 #include <unistd.h> 
 #include <signal.h>
+#include <time.h>
 
 void sigHandler (int);
 
@@ -29,11 +30,18 @@ int main()
     }else if(pid == 0){
         
         //get random amount of time
+        srand(time(0));
         int waitTime = rand() % 5 + 1;
+        int randSig = rand() % 2 + 1;
 
+        printf("randSig = %d\n", randSig);
         sleep(waitTime);
-
-        kill(0, SIGUSR1);
+        if(randSig == 1){
+            kill(getppid(), SIGUSR1);
+        }
+        else if (randSig == 2){
+            kill(getppid(), SIGUSR2);
+        }
 
     }else{
         printf("spawned child PID: %d\n", pid);
