@@ -19,8 +19,10 @@ pid_t parentPID;
 
 int main() 
 {
+    //Seet rand() call with the current time
     srand(time(0));
-    parentPID = getppid();
+
+    //Override signals
     signal (SIGUSR1, sigHandler);
     signal (SIGUSR2, sigHandler);
 
@@ -29,7 +31,7 @@ int main()
         perror("fork failed");
         exit(1);
 
-    }else if(pid == 0){
+    }else if(pid == 0){     // This is the child code
         
         while(1){        
             //get random amount of time
@@ -49,7 +51,7 @@ int main()
             
             }
         }
-    }else{
+    }else{      // This is the parent code
         
         // override ctrl-C signal in parent branch so only the parent knows about the override
         signal (SIGINT, sigHandler);
@@ -67,7 +69,7 @@ int main()
    return 0; 
 }
 
-
+// The function that the new signals will use when sent
 void sigHandler (int sigNum){
 
     if(sigNum == SIGUSR1){
